@@ -13,9 +13,11 @@ def main():
         print("Could not open webcam.")
         return
 
-    # Fullscreen window
-    cv2.namedWindow("YOLOv8 Real-Time Detection", cv2.WINDOW_NORMAL)
-    cv2.setWindowProperty("YOLOv8 Real-Time Detection", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+    window_name = "YOLOv8 Real-Time Detection"
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)  # Make window resizable
 
     while True:
         ret, frame = cap.read()
@@ -36,7 +38,12 @@ def main():
             cv2.putText(frame, f"{label} {conf:.2f}", (x1, y1 - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
 
-        cv2.imshow("YOLOv8 Real-Time Detection", frame)
+        # Get current window dimensions and resize frame to match
+        x, y, w, h = cv2.getWindowImageRect(window_name)
+        if w > 0 and h > 0:
+            frame = cv2.resize(frame, (w, h), interpolation=cv2.INTER_LINEAR)
+
+        cv2.imshow(window_name, frame)
         if cv2.waitKey(1) & 0xFF == 27:
             break
 
