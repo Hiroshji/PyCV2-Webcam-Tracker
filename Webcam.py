@@ -2,6 +2,8 @@ import cv2
 import torch
 import torch.backends.cudnn as cudnn
 from ultralytics import YOLO
+from playsound import playsound
+import threading
 
 def main():
     cv2.setUseOptimized(True)
@@ -24,6 +26,11 @@ def main():
     window_name = "YOLOv8 Real-Time Detection"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
 
+    def play_sound():
+        playsound("SoundEffects/SpaceBoyfriendTheme.mp3")
+
+    phone_detected = False  # track phone detection status
+
     while True:
         ret, frame = cap.read()
         if not ret:
@@ -35,10 +42,13 @@ def main():
                 frame = frame.astype('float16')
             results = model.predict(frame, conf=0.5, iou=0.45, device=device, imgsz=720)
 
+        found_phone = False
         for box in results[0].boxes:
             x1, y1, x2, y2 = map(int, box.xyxy[0])
             label = model.names[int(box.cls[0])]
             conf = box.conf[0]
+            if label.lower() == "cell phone":
+                found_phone = True
             cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
             cv2.putText(
                 frame,
@@ -49,6 +59,13 @@ def main():
                 (255, 0, 0),
                 2
             )
+
+        # Play sound once only when the phone is newly detected
+        if found_phone and not phone_detected:
+            threading.Thread(target=play_sound, daemon=True).start()
+            phone_detected = True
+        elif not found_phone:
+            phone_detected = False
 
         cv2.imshow(window_name, frame)
         if cv2.waitKey(1) & 0xFF == 27:
