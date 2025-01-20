@@ -2,13 +2,22 @@ import cv2
 import torch
 import torch.backends.cudnn as cudnn
 from ultralytics import YOLO
-from playsound import playsound
-import threading
+import pygame
 
 def main():
     cv2.setUseOptimized(True)
     cv2.setNumThreads(4)
     cudnn.benchmark = True
+
+    # Initialize audio
+    pygame.mixer.init()
+
+    def start_sound():
+        pygame.mixer.music.load("SoundEffects/HATSUNE.mp3")
+        pygame.mixer.music.play(-1)  # loop indefinitely
+
+    def stop_sound():
+        pygame.mixer.music.stop()
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model = YOLO("yolov8n.pt").to(device)
@@ -26,10 +35,7 @@ def main():
     window_name = "YOLOv8 Real-Time Detection"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
 
-    def play_sound():
-        playsound("SoundEffects/HATSUNE.mp3")
-
-    phone_detected = False  # track phone detection status
+    phone_detected = False
 
     while True:
         ret, frame = cap.read()
@@ -60,17 +66,20 @@ def main():
                 2
             )
 
-        # Play sound once only when the phone is newly detected
+        # Start sound if phone is newly detected
         if found_phone and not phone_detected:
-            threading.Thread(target=play_sound, daemon=True).start()
+            start_sound()
             phone_detected = True
-        elif not found_phone:
+        # Stop sound if phone is no longer detected
+        elif not found_phone and phone_detected:
+            stop_sound()
             phone_detected = False
 
         cv2.imshow(window_name, frame)
         if cv2.waitKey(1) & 0xFF == 27:
             break
 
+    stop_sound()
     cap.release()
     cv2.destroyAllWindows()
 
