@@ -13,6 +13,7 @@ A Python-based real-time object detection application using the YOLOv8 model, Op
 - OpenCV
 - PyTorch
 - Ultralytics YOLOv8
+- pygame
 
 > [!NOTE]
 > Anything above version 3.12.4 for python will not work given that not every library is updated for said verison)
@@ -27,7 +28,7 @@ This section explains how to tweak specific settings in the script to modify its
 ### Change Precision (16-bit or 32-bit)
 By default, the model uses 32-bit precision. To improve performance on GPUs, you can switch to 16-bit precision. Modify the following lines in the code:
 > [!NOTE]
-> The file is currently on 16 bit.
+> The file is currently on 16 bit it can be changed by removing "float16" and leaving it blank.
 
 - **32-bit Precision (Default):**
   ```python
@@ -43,8 +44,8 @@ By default, the model uses 32-bit precision. To improve performance on GPUs, you
 Set the resolution of the webcam input using these lines:
 
 ```Python
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 ```
 
 

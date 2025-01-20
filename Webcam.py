@@ -41,8 +41,8 @@ def main():
         print("Could not open webcam.")
         return
 
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
 
     window_name = "YOLOv8 Real-Time Detection"
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
@@ -68,7 +68,7 @@ def main():
         with torch.no_grad():
             if device == "cuda":
                 frame = frame.astype('float16')
-            results = model.predict(frame, conf=0.5, iou=0.45, device=device, imgsz=720)
+            results = model.predict(frame, conf=0.5, iou=0.45, device=device, imgsz=1088)
 
         found_phone = False
         found_bottle = False  # Initialize found_bottle flag
