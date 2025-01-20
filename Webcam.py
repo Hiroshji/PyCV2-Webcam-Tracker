@@ -27,7 +27,7 @@ def main():
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL)
 
     def play_sound():
-        playsound("SoundEffects/SpaceBoyfriendTheme.mp3")
+        playsound("SoundEffects/HATSUNE.mp3")
 
     phone_detected = False  # track phone detection status
 
