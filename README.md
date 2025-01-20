@@ -19,7 +19,7 @@ A Python-based real-time object detection application using the YOLOv8 model, Op
 > Anything above version 3.12.4 for python will not work given that not every library is updated for said verison)
 Install the required libraries.
 ```bash
-pip install opencv-python torch ultralytics
+pip install opencv-python torch torchvision torchaudio ultralytics pygame
 ```
 
 ## Configuration
